@@ -21,9 +21,10 @@ public class SimulatedSystem {
     }
 
     public void tick() {
+        currentTime++;
+
         if (processQueue.size() == 0 && currentProcess == null) {
             idle = true;
-            currentTime++;
             return;
         } else {
             idle = false;
@@ -51,8 +52,6 @@ public class SimulatedSystem {
             onQueueEmpty();
             currentProcess = null;
         }
-
-        currentTime++;
     }
 
     public int getCurrentTime() {
