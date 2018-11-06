@@ -8,7 +8,6 @@ public class SimulatedSystem {
     private int currentTime = 0;
     private boolean idle = false;
     private ProcessRunningInfo currentProcess;
-    private long systemStartTime = System.currentTimeMillis();
     private List<ProcessRunningInfo> allProcesses = new ArrayList<>();
 
     public SimulatedSystem(List<ProcessInfo> processQueue) {
@@ -74,7 +73,7 @@ public class SimulatedSystem {
         System.out.println("New Process: " + newProcess);
         System.out.println();
 
-        currentProcess.setEndTime(systemStartTime + currentTime);
+        currentProcess.setEndTime(currentTime);
 
         //Now save
         allProcesses.add(currentProcess);
@@ -83,7 +82,7 @@ public class SimulatedSystem {
     public void onQueueEmpty() {
         System.out.println("All processes completed!");
 
-        currentProcess.setEndTime(systemStartTime + currentTime);
+        currentProcess.setEndTime(currentTime);
 
         //Now save
         allProcesses.add(currentProcess);
@@ -108,7 +107,7 @@ public class SimulatedSystem {
 
         public ProcessRunningInfo(ProcessInfo info) {
             this.info = info;
-            this.startTime = systemStartTime + currentTime;
+            this.startTime = currentTime;
         }
 
         public long getStartTime() {
