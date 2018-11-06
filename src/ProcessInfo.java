@@ -1,19 +1,13 @@
 public class ProcessInfo {
-    private int priority;
     private int burstTime;
     private long pid;
     private int arrivalTime;
     private boolean completed;
 
-    public ProcessInfo(int priority, int burstTime, long pid, int arrivalTime) {
-        this.priority = priority;
+    public ProcessInfo(int burstTime, long pid, int arrivalTime) {
         this.burstTime = burstTime;
         this.pid = pid;
         this.arrivalTime = arrivalTime;
-    }
-
-    public int getPriority() {
-        return priority;
     }
 
     public void setBurstTime(int burstTime) {
@@ -39,7 +33,6 @@ public class ProcessInfo {
     @Override
     public String toString() {
         return "ProcessInfo{" +
-                "priority=" + priority +
                 ", burstTime=" + burstTime +
                 ", pid=" + pid +
                 ", arrivalTime=" + arrivalTime +

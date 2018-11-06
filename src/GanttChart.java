@@ -7,12 +7,19 @@ import org.jfree.data.gantt.TaskSeries;
 import org.jfree.data.gantt.TaskSeriesCollection;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class GanttChart extends JFrame {
+
+    private static boolean USE_PREMADE = true;
+    private static ProcessInfo[] PREMADE_PROCESSES = new ProcessInfo[] {
+        new ProcessInfo(12, 1, 0),
+            new ProcessInfo(5, 2, 4),
+            new ProcessInfo(2, 3, 7),
+            new ProcessInfo(7, 4, 9),
+            new ProcessInfo(9, 5, 3)
+    };
+
 
     private static final Random RANDOM = new Random();
     private static final int PROCESS_COUNT = 5;
@@ -70,10 +77,13 @@ public class GanttChart extends JFrame {
     }
 
     public static List<ProcessInfo> randomProcesses() {
+        if (USE_PREMADE)
+            return new ArrayList<>(Arrays.asList(PREMADE_PROCESSES));
+
         ArrayList<ProcessInfo> processes = new ArrayList<>();
         for (int i = 0; i < PROCESS_COUNT; i++) {
             processes.add(
-                    new ProcessInfo(0, RANDOM.nextInt(10) + 1, i, i)
+                    new ProcessInfo(RANDOM.nextInt(10) + 1, i, i)
             );
         }
 

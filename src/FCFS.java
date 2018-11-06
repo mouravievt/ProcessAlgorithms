@@ -32,7 +32,7 @@ public class FCFS implements Scheduler {
             //Then we have completed the process
             endProcess(currentProcess);
             //Remove from queue
-            queue.remove(0);
+            queue.remove(currentProcess);
 
             //If there are more processes
             if (queue.size() > 0) {
