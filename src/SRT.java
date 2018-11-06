@@ -25,6 +25,12 @@ public class SRT extends SJF {
         remaining -= 1;
         remainingTime.put(currentProcess.getPid(), remaining);
 
+        //A weird fix for FCFS logic and sorting logic
+        //We must save the burst time so SJF tie breaker sorts properly
+        //And we must shift the start time up to ensure FCFS continues to calculate the correct end time
+        currentProcess.setBurstTime(remaining);
+        startTime++;
+
         //Now sort the current queue, since the remaining times have changed
         Collections.sort(queue, this);
 

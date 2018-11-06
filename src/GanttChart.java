@@ -54,14 +54,37 @@ public class GanttChart extends JFrame {
 
         List<SimulatedSystem.ProcessRunningInfo> allTimes = system.getProcessRunningTimes();
 
-        TaskSeries series = new TaskSeries("Process Running Time");
+
+        //Weird thing to get multiple boxes to show in a row
+
+        List<TaskSeries> allSeries = new ArrayList<>();
+        allSeries.add(new TaskSeries("Process Running Time 0"));
+
         for (SimulatedSystem.ProcessRunningInfo time : allTimes) {
-            Task t = new Task("" + time.getProcess().getPid(), new Date(time.getStartTime()), new Date(time.getEndTime()));
-            series.add(t);
+            for (int i = 0; i < allSeries.size(); i++) {
+                TaskSeries series = allSeries.get(i);
+                if (series.get("" + time.getProcess().getPid()) != null) {
+                    if (i + 1 >= allSeries.size()) {
+                        //If we are at the end of the series list, make a new series
+                        series = new TaskSeries("Process Running Time " + (i + 1));
+                        allSeries.add(series);
+                    } else {
+                        //If this series already has this task (process), then continue to the next series
+                        continue;
+                    }
+                }
+                Task t = new Task("" + time.getProcess().getPid(), new Date(time.getStartTime()), new Date(time.getEndTime()));
+                series.add(t);
+
+                //If we were able to add it, break and go to the next task (process)
+                break;
+            }
         }
 
         TaskSeriesCollection dataset = new TaskSeriesCollection();
-        dataset.add(series);
+
+        //Add all the series
+        allSeries.forEach(dataset::add);
 
         return dataset;
     }
