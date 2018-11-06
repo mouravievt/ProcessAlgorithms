@@ -7,7 +7,9 @@ public class SimulatedSystem {
 
     private int currentTime = 0;
     private boolean idle = false;
-    private ProcessInfo currentProcess;
+    private ProcessRunningInfo currentProcess;
+    private long systemStartTime = System.currentTimeMillis();
+    private List<ProcessRunningInfo> allProcesses = new ArrayList<>();
 
     public SimulatedSystem(List<ProcessInfo> processQueue) {
         this.processQueue = processQueue;
@@ -40,16 +42,15 @@ public class SimulatedSystem {
         ProcessInfo running = scheduler.tick(this);
 
         if (currentProcess == null) {
-            currentProcess = running;
-        } else if (currentProcess != running && running != null) {
+            currentProcess = new ProcessRunningInfo(running);
+        } else if (currentProcess.getProcess() != running && running != null) {
             //TODO Context switching!
-            onContextSwitch(currentProcess, running);
+            onContextSwitch(currentProcess.getProcess(), running);
 
-            currentProcess = running;
+            currentProcess = new ProcessRunningInfo(running);
         } else if (running == null) {
-            currentProcess = null;
-
             onQueueEmpty();
+            currentProcess = null;
         }
 
         currentTime++;
@@ -72,12 +73,20 @@ public class SimulatedSystem {
         System.out.println("Old Process: " + oldProcess);
         System.out.println("New Process: " + newProcess);
         System.out.println();
+
+        currentProcess.setEndTime(systemStartTime + currentTime);
+
+        //Now save
+        allProcesses.add(currentProcess);
     }
 
     public void onQueueEmpty() {
         System.out.println("All processes completed!");
 
-        //TODO Calculate averages
+        currentProcess.setEndTime(systemStartTime + currentTime);
+
+        //Now save
+        allProcesses.add(currentProcess);
     }
 
     public boolean isIdle() {
@@ -86,5 +95,36 @@ public class SimulatedSystem {
 
     public void queueProcess(ProcessInfo process) {
         processQueue.add(process);
+    }
+
+    public List<ProcessRunningInfo> getProcessRunningTimes() {
+        return allProcesses;
+    }
+
+    public class ProcessRunningInfo {
+        private long startTime;
+        private long endTime;
+        private ProcessInfo info;
+
+        public ProcessRunningInfo(ProcessInfo info) {
+            this.info = info;
+            this.startTime = systemStartTime + currentTime;
+        }
+
+        public long getStartTime() {
+            return startTime;
+        }
+
+        public long getEndTime() {
+            return endTime;
+        }
+
+        public void setEndTime(long endTime) {
+            this.endTime = endTime;
+        }
+
+        public ProcessInfo getProcess() {
+            return info;
+        }
     }
 }
