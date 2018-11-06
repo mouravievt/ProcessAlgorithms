@@ -22,6 +22,8 @@ public class ProcessInfo {
         return pid;
     }
 
+    public void setArrivalTime(int arrivalTime){ this.arrivalTime = arrivalTime; }
+
     public int getArrivalTime() {
         return arrivalTime;
     }
