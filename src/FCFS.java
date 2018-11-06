@@ -49,7 +49,10 @@ public class FCFS implements Scheduler {
 
     @Override
     public int compare(ProcessInfo o1, ProcessInfo o2) {
-        return o1.getArrivalTime() - o2.getArrivalTime();
+        int val = o1.getArrivalTime() - o2.getArrivalTime();
+        if (val == 0)
+            val = (int)(o1.getPid() - o2.getPid());
+        return val;
     }
 
     protected void endProcess(ProcessInfo process) {

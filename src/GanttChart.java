@@ -23,7 +23,10 @@ public class GanttChart extends JFrame {
 
     private static final Random RANDOM = new Random();
     private static final int PROCESS_COUNT = 5;
-    private static final Scheduler TYPE = new SRT();
+    private static final Scheduler TYPE = new FCFS();
+
+    private List<ProcessInfo> processes = randomProcesses();
+    private SimulatedSystem system = new SimulatedSystem(processes);
 
     public GanttChart() {
         super("Gantt Process Schedule");
@@ -32,7 +35,7 @@ public class GanttChart extends JFrame {
 
         // Create chart
         JFreeChart chart = ChartFactory.createGanttChart(
-                "Gantt Process Schedule", // Chart title
+                "Wait Time: " + system.getWaitTime() + "\nTurn Around Time: " + system.getTurnaroundTime(), // Chart title
                 "Process Identifier (pID)", // X-Axis Label
                 "Timeline", // Y-Axis Label
                 dataset);
@@ -42,9 +45,7 @@ public class GanttChart extends JFrame {
     }
 
     public IntervalCategoryDataset getDataset() {
-        List<ProcessInfo> processes = randomProcesses();
 
-        SimulatedSystem system = new SimulatedSystem(processes);
 
         system.setScheduler(TYPE);
 

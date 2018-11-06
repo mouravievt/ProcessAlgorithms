@@ -33,7 +33,7 @@ public class ProcessInfo {
     @Override
     public String toString() {
         return "ProcessInfo{" +
-                ", burstTime=" + burstTime +
+                "burstTime=" + burstTime +
                 ", pid=" + pid +
                 ", arrivalTime=" + arrivalTime +
                 ", completed=" + completed +

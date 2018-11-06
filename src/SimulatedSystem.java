@@ -10,6 +10,13 @@ public class SimulatedSystem {
     private ProcessRunningInfo currentProcess;
     private List<ProcessRunningInfo> allProcesses = new ArrayList<>();
 
+    private int waitTimeSum = 0;
+    private int turnaroundTimeSum = 0;
+    private int totalScheduled = 0;
+
+    private double waitTime;
+    private double turnaroundTime;
+
     public SimulatedSystem(List<ProcessInfo> processQueue) {
         this.processQueue = processQueue;
     }
@@ -36,6 +43,7 @@ public class SimulatedSystem {
             if (currentTime >= p.getArrivalTime()) {
                 scheduler.schedule(p, this);
                 processQueue.remove(i);
+                totalScheduled++;
             }
         }
 
@@ -76,6 +84,12 @@ public class SimulatedSystem {
 
         //Now save
         allProcesses.add(currentProcess);
+
+        //Add waiting sum
+        waitTimeSum += (currentTime - newProcess.getArrivalTime());
+
+        //Add turnaround sum
+        turnaroundTimeSum += (currentTime - oldProcess.getArrivalTime());
     }
 
     public void onQueueEmpty() {
@@ -85,6 +99,18 @@ public class SimulatedSystem {
 
         //Now save
         allProcesses.add(currentProcess);
+
+        waitTime = (double)waitTimeSum / (double)totalScheduled;
+        turnaroundTime = (double)turnaroundTimeSum / (double)totalScheduled;
+
+    }
+
+    public double getWaitTime() {
+        return waitTime;
+    }
+
+    public double getTurnaroundTime() {
+        return turnaroundTime;
     }
 
     public boolean isIdle() {

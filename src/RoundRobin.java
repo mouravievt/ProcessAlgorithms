@@ -1,6 +1,68 @@
-package com.company;
+import java.util.ArrayList;
+import java.util.List;
 
-public class RoundRobin {
+public class RoundRobin implements Scheduler {
+    protected int quantum = 4;
+    protected int cursor = 0;
+    protected List<ProcessInfo> queue = new ArrayList<>();
+    protected ProcessInfo currentProcess;
+    protected int startTime = 0;
+
+    public RoundRobin(int quantum) {
+        this.quantum = quantum;
+    }
+
+    @Override
+    public void schedule(ProcessInfo info, SimulatedSystem system) {
+        queue.add(info);
+
+        if (currentProcess == null) {
+            startProcess(queue.get(0), system);
+        }
+    }
+
+    @Override
+    public ProcessInfo tick(SimulatedSystem system) {
+        if (currentProcess == null)
+            return null;
+
+        //Calculate the end time
+        int trueEndTime = startTime + currentProcess.getBurstTime();
+        int roundRobinEndTime = startTime + quantum;
+
+        int endTime = Math.min(trueEndTime, roundRobinEndTime);
+
+        //If the current clock equals the end time (or is greater)
+        if (system.getCurrentTime() >= endTime) {
+
+            //If the process has completed
+            if (endTime == trueEndTime) {
+                //Then we have completed the process
+                endProcess(currentProcess);
+                //Remove from queue
+                queue.remove(currentProcess);
+            } else {
+                //Otherwise suspend it
+                //To suspend a process, we must set the burst time to how much time is actually remaining
+                currentProcess.setBurstTime(trueEndTime - system.getCurrentTime());
+                cursor++;
+            }
+
+            if (cursor >= queue.size())
+                cursor = 0;
+
+            //If there are more processes
+            if (queue.size() > 0) {
+                //Start the next process
+                startProcess(queue.get(cursor), system);
+            } else {
+                currentProcess = null;
+            }
+        }
+
+        //Return the current running process
+        return currentProcess;
+    }
 
     static void findWaitTime(int pids[ ], int numberOfPids, int burstTime[ ], int waitTime[ ], int quantum){
 
@@ -77,5 +139,19 @@ public class RoundRobin {
 
         System.out.println("Average waiting time=" + (float) totalWaitTime / (float) numberOfPids);
         System.out.println("Average turn around time=" + (float) totalTurnAroundTime / (float) numberOfPids);
+    }
+
+    @Override
+    public int compare(ProcessInfo o1, ProcessInfo o2) {
+        throw new IllegalAccessError("No sorting is done in round robin");
+    }
+
+    protected void endProcess(ProcessInfo process) {
+        process.complete();
+    }
+
+    protected void startProcess(ProcessInfo process, SimulatedSystem system) {
+        currentProcess = process;
+        startTime = system.getCurrentTime();
     }
 }
