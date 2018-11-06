@@ -137,8 +137,8 @@ public class RoundRobin implements Scheduler {
             System.out.println(" " + (kk + 1) + "\t\t" + burstTime[kk] + "\t" + waitTime[kk] + "\t\t" + turnAroundTime[kk]);
         }
 
-        System.out.println("Average waiting time=" + (float) totalWaitTime / (float) numberOfPids);
-        System.out.println("Average turn around time=" + (float) totalTurnAroundTime / (float) numberOfPids);
+        System.out.println("Average waiting time = " + (float) totalWaitTime / (float) numberOfPids);
+        System.out.println("Average turn around time = " + (float) totalTurnAroundTime / (float) numberOfPids);
     }
 
     @Override
