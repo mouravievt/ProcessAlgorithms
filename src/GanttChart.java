@@ -91,6 +91,19 @@ public class GanttChart extends JFrame {
     }
 
     public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        System.out.println("Please enter the amount processes you would like to schedule: ");
+        int pidAmount = input.nextInt();
+        ProcessInfo[] pidArray = new ProcessInfo[pidAmount];
+
+        for (int ii = 0; ii < pidAmount; pidAmount++) {
+
+            System.out.println("Please enter the arrival time for PID #" + ii + ": ");
+            pidArray[ii].setArrivalTime(input.nextInt());
+            System.out.println("Please enter the burst time for PID #" + ii + ": ");
+            pidArray[ii].setBurstTime(input.nextInt());
+        }
+
         SwingUtilities.invokeLater(() -> {
             GanttChart example = new GanttChart();
             example.setSize(800, 400);
